@@ -1,0 +1,46 @@
+Requisitos para graphiql
+
+1. Node.js instalado
+	1.1 comandos de instalación y configuracion del ambiente
+		1.1.1 descargar e instalar nodejs de su pagina oficial
+		1.1.2 npm init -y
+		1.1.3 npm i express
+		1.1.4 npm install --save-dev @babel/core @babel/cli @babel/present-env (Opcional)
+			crear un archivo .babelrc con el siguiente contenido {"presets":["@babel/present-env"]}
+		1.1.5 npm i @babel/node -D
+		en package-json configurar sus scripts por ejemplo
+		Nota: para que se generen los archivos --source-maps se utiliza el script "build", estos archivos permiten correr la aplicacion que se esta desarrollando en el SO que sea
+			 "scripts": {
+				"build": "babel src -d dist --source-maps",
+				"start": "babel-node src/server.js",
+			  },
+		1.1.6 npm i nodemon -D
+			para ejecutar la dependencia de nodemon se requiere el siguiente script, es similar al script "start" pero en este caso es correr el codigo que "build" habria convertido
+			1.1.6.1
+				"serverdist": "node dist/server.js",	
+			1.1.6.2
+				en package-json configurar el script start para ejecutar con nodemon de la siguiente manera
+				"start": "nodemon src/server.js --exec babel-node",
+		1.1.7 npm i rimraf
+			1.1.7.1 
+				en package-json configurar el script "clean" para eliminar la carpeta dist
+				"clean": "rimraf dist"
+2. Servidor GraphQL funcionando (ej. Apollo Server, Express GraphQL)
+	2.1 comandos de instalación y configuracion del ambiente para GraphQL
+		2.1.1 npm i graphql express-graphql 
+3. GraphQL instalado en el proyecto
+	una vez instalado se requiere la linea 
+			import { graphqlHTTP } from 'express-graphql'; en server.js
+				e incluir su middleware 
+				app.use('/graphql', graphqlHTTP({ {...}
+4. Middleware o configuración que sirva la interfaz GraphiQL
+		el middleware actual es:
+		app.use('/graphql', graphqlHTTP({
+			graphiql: true,
+			schema: schema
+		}));
+6. Puerto de red disponible para acceder vía navegador
+	http://localhost:3000/graphql 
+
+
+				
