@@ -5,6 +5,21 @@ const typeDefs = `
     type Query {
         hello: String
         saludo(nombre: String!): String
+        tasks: [Task!]!
+    }
+    type Task {
+        id: ID!
+        title: String!
+        description: String
+        number: Int
+    }
+    type Mutation {
+        createTask(input:TaskInput): Task
+    }
+    input TaskInput {
+        title: String!
+        description: String
+        number: Int
     }
 `; // GraphQL schema definition in SDL (Schema Definition Language). / Definición del esquema GraphQL en SDL (Schema Definition Language).
 /**A continuación, se crea el esquema ejecutable utilizando las definiciones de tipo y los resolvers. */
@@ -13,3 +28,6 @@ export default makeExecutableSchema({
     resolvers: resolvers
 });
 /**exporte el objeto schema creado, ahora los importaremos en el servidor */
+/**punto [1a] creare el tipo task */
+/**a continuación, creare una definición de tipo (GraphQL SDL) que muestre el concepto "Mutacion"*/
+/**En GraphQL SDL, una mutación es un tipo especial que define operaciones que modifican datos (crear, actualizar, eliminar). Se declara con la palabra clave type Mutation. */

@@ -1,0 +1,132 @@
+Requisitos para graphiql
+
+1. Node.js instalado
+	1.1 comandos de instalación y configuracion del ambiente
+		1.1.1 descargar e instalar nodejs de su pagina oficial
+		1.1.2 npm init -y
+		1.1.3 npm i express
+		1.1.4 npm install --save-dev @babel/core @babel/cli @babel/present-env (Opcional)
+			crear un archivo .babelrc con el siguiente contenido {"presets":["@babel/present-env"]}
+		1.1.5 npm i @babel/node -D
+		en package-json configurar sus scripts por ejemplo
+		Nota: para que se generen los archivos --source-maps se utiliza el script "build", estos archivos permiten correr la aplicacion que se esta desarrollando en el SO que sea
+			 "scripts": {
+				"build": "babel src -d dist --source-maps",
+				"start": "babel-node src/server.js",
+			  },
+		1.1.6 npm i nodemon -D
+			para ejecutar la dependencia de nodemon se requiere el siguiente script, es similar al script "start" pero en este caso es correr el codigo que "build" habria convertido
+			1.1.6.1
+				"serverdist": "node dist/server.js",	
+			1.1.6.2
+				en package-json configurar el script start para ejecutar con nodemon de la siguiente manera
+				"start": "nodemon src/server.js --exec babel-node",
+		1.1.7 npm i rimraf
+			1.1.7.1 
+				en package-json configurar el script "clean" para eliminar la carpeta dist
+				"clean": "rimraf dist"
+2. Servidor GraphQL funcionando (ej. Apollo Server, Express GraphQL)
+	2.1 comandos de instalación y configuracion del ambiente para GraphQL
+		2.1.1 npm i graphql express-graphql 
+3. GraphQL instalado en el proyecto
+	una vez instalado se requiere la linea 
+			import { graphqlHTTP } from 'express-graphql'; en server.js
+				e incluir su middleware 
+				app.use('/graphql', graphqlHTTP({ {...}
+4. Middleware o configuración que sirva la interfaz GraphiQL
+		el middleware actual es:
+		app.use('/graphql', graphqlHTTP({
+			graphiql: true,
+			schema: schema
+		}));
+6. Puerto de red disponible para acceder vía navegador
+	http://localhost:3000/graphql 
+
+/** Primer request desde GraphiQL */
+/*
+mutation{
+  createTask(input:
+  	{title: "Title One Task"
+     description: "Description One Task"
+     number: 1
+    }
+  ) {
+    id
+    title
+    description
+    number
+  }
+}
+ */
+Línea 47: mutation{ - Inicia una operación de mutación en GraphQL, que permite modificar datos en el servidor.
+Línea 48:   createTask(input: - Llama a la mutación createTask y pasa un parámetro input que contiene los datos de la nueva tarea.
+Línea 49:   	{title: "Title One Task" - Define el campo title en el objeto de entrada con el valor "Title One Task".
+Línea 50:      description: "Description One Task" - Define el campo description con el valor "Description One Task".
+Línea 51:      number: 1 - Define el campo number con el valor 1.
+Línea 52:     } - Cierra el objeto de entrada (input).
+Línea 53:   ) { - Cierra los parámetros de la mutación y abre el conjunto de selección para especificar qué campos devolver en la respuesta.
+Línea 54:     id - Selecciona el campo id de la tarea creada para incluirlo en la respuesta.
+Línea 55:     title - Selecciona el campo title para incluirlo en la respuesta.
+Línea 56:     description - Selecciona el campo description para incluirlo en la respuesta.
+Línea 57:     number - Selecciona el campo number para incluirlo en la respuesta.
+Línea 58:   } - Cierra el conjunto de selección de la mutación.
+Línea 59: } - Cierra la operación de mutación completa.
+/**A continuación, se muestra una consulta para recuperar todas las tareas */
+query{
+  tasks{
+    id
+    title
+    description
+    number
+  }
+}
+/**A continuación, se muestra la respuesta que entrego graphiql donde aparece la tarea que se creó */
+{
+  "data": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Task 1",
+        "description": "Description for Task 1",
+        "number": 100
+      },
+      {
+        "id": "2",
+        "title": "Task 2",
+        "description": "Description for Task 2",
+        "number": null
+      },
+      {
+        "id": "3",
+        "title": "Task 3",
+        "description": "Description for Task 3",
+        "number": null
+      },
+      {
+        "id": "4",
+        "title": "Title One Task",
+        "description": "Description One Task",
+        "number": 1
+      }
+    ]
+  }
+}
+/**Pasaremos a la etapa del MongoDB señalada en el tutorial */
+1. descargar desde su página web e instalar MongoDB Atlas
+2. instalar mongoose con npm i mongoose
+3. configurar la conexión a MongoDB Atlas en el servidor Express
+4. inicializar el servidor de mongoDB y probar la conexión
+	para inicializar mongoDB en el panel de Service.mcs
+5. un ejemplo de conexión a MongoDB Atlas usando Mongoose en el servidor Express es:
+	export async function connectDB() {
+	try {
+		await mongoose.connect("mongodb://localhost/mongodbgraphql", {});
+		console.log('MongoDB connected');
+	} catch (error) {
+		console.error('Error connecting to MongoDB:', error);
+		process.exit(1);
+	}
+	}
+6. configurar en el archivo server.js la función de conexión a MongoDB Atlas con el siguiente código:
+	import { connectDB } from './database';
+	connectDB();
