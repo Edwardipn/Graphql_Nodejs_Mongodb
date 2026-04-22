@@ -62,7 +62,8 @@ app.get('/', (request, response) => {
 
 app.use('/graphql', graphqlHTTP({
     graphiql: true,
-    schema: schema
+    schema: schema,
+    context: { message: "Envio este texto desde la propiedad context del middleware de GraphQL" }
 }));
 
 app.listen(3000, () => {

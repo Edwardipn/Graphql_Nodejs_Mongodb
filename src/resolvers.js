@@ -19,7 +19,11 @@ export const resolvers = {
     Query: {
         hello: () => 'Hello, World from resolvers!',
         saludo: (parent, { nombre }) => `Hola, ${nombre}!`,
-        tasks: () => tasks
+        tasks: () => tasks,
+        greet: (parent, args, context) => {
+            console.log('Context received in resolver: ', context);
+            return `Hola, ${args.nombre}!`;
+        }
     }
 /*     ,
     Mutation: {

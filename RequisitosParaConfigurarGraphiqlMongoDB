@@ -41,6 +41,19 @@ Requisitos para graphiql
 		}));
 6. Puerto de red disponible para acceder vía navegador
 	http://localhost:3000/graphql 
+/**Configuración del type Query{} para saludo enviandole un nombre */
+const typeDefs = `
+    type Query {
+        saludo(nombre: String!): String
+    }`;
+/**Resolver para el type Query{} de saludo */
+export const resolvers = {
+				Query: {
+					saludo: (parent, args) => `Hola, ${args.nombre}!`
+				}
+			};
+/**script para saludo desde GraphiQL */
+ {  saludo(nombre: "Edwin")}
 
 /** Primer request desde GraphiQL */
 /*
@@ -130,3 +143,17 @@ query{
 6. configurar en el archivo server.js la función de conexión a MongoDB Atlas con el siguiente código:
 	import { connectDB } from './database';
 	connectDB();
+7. voy a mandar el String "Envio este texto desde la propiedad context del middleware de GraphQL"
+8. este texto "Envio este texto desde la propiedad context del middleware de GraphQL" lo puede recibir cualquier "resolver de GraphQL" a través del segundo parámetro de la función resolver, por ejemplo: greet
+
+export const resolvers = {
+	Query: {
+		hello: () => 'Hello, World from resolvers!',
+		saludo: (parent, { nombre }) => `Hola, ${nombre}!`,
+		tasks: () => tasks,
+		greet: (parent, args, context) => {
+			console.log('Context received in resolver: ', context);
+			return `Hola, ${args.nombre}!`;
+		}
+	}
+};

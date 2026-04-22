@@ -6,6 +6,7 @@ const typeDefs = `
         hello: String
         saludo(nombre: String!): String
         tasks: [Task!]!
+        greet(nombre: String!): String
     }
     type Task {
         id: ID!
