@@ -157,3 +157,40 @@ export const resolvers = {
 		}
 	}
 };
+/**Estructura para mi updateUser en GraphiQL */
+mutation{
+	updateUser(
+    id:"69e8f0d201027d6d2f7e492a",
+  	input:{
+      name:"Edward"
+      lastname:"Toledo Gutierrez"
+    }
+  ){
+    id
+    name
+    lastname
+    age
+  }
+}
+dado el siguiente esquema de User en GraphQL
+    type Mutation {
+        updateUser(id: ID!, input: UserInput): User
+    }
+y el siguiente esquema de UserInput en GraphQL
+    input UserInput {
+        name: String!
+        lastname: String
+        age: Int
+    }
+y el siguiente esquema de User en GraphQL
+    type User {
+        id: ID!
+        name: String!
+        lastname: String
+        age: Int
+    }
+donde el resolver de updateUser es el siguiente:
+        updateUser: async (_, { id, input }) => {
+            const user = await User.findByIdAndUpdate(id, input, { returnDocument: 'after' });
+            return user;
+        }
